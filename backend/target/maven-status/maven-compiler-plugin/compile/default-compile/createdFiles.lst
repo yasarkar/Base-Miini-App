@@ -1,0 +1,10 @@
+com\garrison\leaderboard\config\SecurityConfig.class
+com\garrison\leaderboard\config\CorsConfig.class
+com\garrison\leaderboard\dto\ScoreSubmissionRequest.class
+com\garrison\leaderboard\config\SecurityConfig$ApiKeyInterceptor.class
+com\garrison\leaderboard\dto\LeaderboardEntry.class
+com\garrison\leaderboard\controller\ScoreController.class
+com\garrison\leaderboard\repository\ScoreRepository.class
+com\garrison\leaderboard\LeaderboardApplication.class
+com\garrison\leaderboard\model\Score.class
+com\garrison\leaderboard\service\ScoreService.class

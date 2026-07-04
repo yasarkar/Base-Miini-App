@@ -1,0 +1,9 @@
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\dto\ScoreSubmissionRequest.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\service\ScoreService.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\config\CorsConfig.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\config\SecurityConfig.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\controller\ScoreController.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\LeaderboardApplication.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\repository\ScoreRepository.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\dto\LeaderboardEntry.java
+C:\Mini App\backend\src\main\java\com\garrison\leaderboard\model\Score.java
