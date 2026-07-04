@@ -1,1 +1,52 @@
-node_modules
+# ==========================================
+# 1. Frontend (Next.js & Node) İptalleri
+# ==========================================
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# Hassas çevre değişkenleri (Asla repoda olmamalı)
+frontend/.env
+frontend/.env.local
+frontend/.env.production.local
+frontend/.env.development.local
+
+# Test ve log dosyaları
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/.turbo
+
+# ==========================================
+# 2. Backend (Spring Boot & Maven) İptalleri
+# ==========================================
+backend/target/
+backend/*.jar
+backend/*.war
+backend/*.ear
+
+# Yerel geliştirme veritabanı (H2 Database dosyaları)
+backend/db/
+backend/*.db
+
+# Maven sarmalayıcı ve geçici dosyalar (Opsiyonel ama önerilir)
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+
+# ==========================================
+# 3. IDE ve Sistem Dosyaları (Genel)
+# ==========================================
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# İşletim sistemi kalıntıları
+.DS_Store
+Thumbs.db
