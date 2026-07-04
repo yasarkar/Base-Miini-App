@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Roboto_Mono } from "next/font/google";
+import { Inter, Roboto_Mono, Press_Start_2P, Cinzel } from "next/font/google";
 import "./globals.css";
 import { WagmiProvider } from "@/providers/WagmiProvider";
 
@@ -10,6 +10,17 @@ const interSans = Inter({
 
 const robotoMono = Roboto_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const pressStart2P = Press_Start_2P({
+  weight: "400",
+  variable: "--font-press-start",
+  subsets: ["latin"],
+});
+
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
   subsets: ["latin"],
 });
 
@@ -39,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${interSans.variable} ${robotoMono.variable} h-full antialiased`}
+      className={`${interSans.variable} ${robotoMono.variable} ${pressStart2P.variable} ${cinzel.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <WagmiProvider>{children}</WagmiProvider>

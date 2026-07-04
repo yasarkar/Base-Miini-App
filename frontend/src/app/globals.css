@@ -18,8 +18,16 @@
   --color-accent-dark: var(--accent-dark);
   --color-surface: var(--surface);
   --color-surface-light: var(--surface-light);
+  
+  --color-birmingham-dark: #121315;
+  --color-garrison-wood: #2d241e;
+  --color-garrison-amber: #b45309;
+  --color-industrial-gray: #4b5563;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-retro: var(--font-press-start);
+  --font-serif: var(--font-cinzel);
 }
 
 * {

@@ -87,40 +87,72 @@ export class Player {
 
     ctx.save();
 
-    // Shadow
-    ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+    // Shadow on ground
+    ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
     ctx.fillRect(x + 2, y + height - 2, width, 4);
 
-    // Body (Peaky Blinder coat)
-    ctx.fillStyle = COLORS.playerCoat;
+    // Simulated bold pixel-art outline (coal black)
+    ctx.strokeStyle = "#121315";
+    ctx.lineWidth = 2.5;
+
+    // Body/Coat (gradient whiskey brown to coal black)
+    const coatGrad = ctx.createLinearGradient(x + 5, y + 15, x + 5, y + height - 5);
+    coatGrad.addColorStop(0, "#2d241e");
+    coatGrad.addColorStop(1, "#121315");
+    ctx.fillStyle = coatGrad;
     ctx.fillRect(x + 5, y + 15, width - 10, height - 20);
 
+    // Pixel scanline overlay on coat for retro shading
+    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+    for (let slY = y + 16; slY < y + height - 6; slY += 4) {
+      ctx.fillRect(x + 5, slY, width - 10, 2);
+    }
+    
+    // Stroke outline around the coat
+    ctx.strokeRect(x + 5, y + 15, width - 10, height - 20);
+
     // Coat collar
-    ctx.fillStyle = "#2a1e12";
+    ctx.fillStyle = "#121315";
     ctx.fillRect(x + 3, y + 12, width - 6, 6);
+    ctx.strokeRect(x + 3, y + 12, width - 6, 6);
 
     // Legs (running animation)
     const legOffset = isJumping ? 0 : Math.sin(this.state.frame * Math.PI / 2) * 4;
-    ctx.fillStyle = "#2d1f0e";
+    ctx.fillStyle = "#2d241e";
+    
+    // Left leg
     ctx.fillRect(x + 8, y + height - 15, 8, 15);
+    ctx.strokeRect(x + 8, y + height - 15, 8, 15);
+    
+    // Right leg
     ctx.fillRect(x + width - 16, y + height - 15 + legOffset, 8, 15);
+    ctx.strokeRect(x + width - 16, y + height - 15 + legOffset, 8, 15);
 
     // Head
     ctx.fillStyle = COLORS.playerHead;
     ctx.beginPath();
     ctx.ellipse(x + width / 2, y + 8, 12, 10, 0, 0, Math.PI * 2);
     ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(x + width / 2, y + 8, 12, 10, 0, 0, Math.PI * 2);
+    ctx.stroke();
 
     // Flat cap (signature Shelby hat)
-    ctx.fillStyle = hasFlatCap ? "#8b6914" : COLORS.playerHat;
+    const capColor = hasFlatCap ? "#b45309" : "#4b5563";
+    const capTopColor = hasFlatCap ? "#e87a24" : "#6b7280";
+    
+    ctx.fillStyle = capColor;
     ctx.fillRect(x + 6, y - 2, width - 12, 6);
+    ctx.strokeRect(x + 6, y - 2, width - 12, 6);
+    
+    ctx.fillStyle = capTopColor;
     ctx.fillRect(x + 4, y - 4, width - 8, 3);
+    ctx.strokeRect(x + 4, y - 4, width - 8, 3);
 
-    if (hasFlatCap) {
-      // Cap peak
-      ctx.fillStyle = "#c9a84c";
-      ctx.fillRect(x + width - 14, y - 4, 10, 3);
-    }
+    // Cap peak
+    ctx.fillStyle = capColor;
+    ctx.fillRect(x + width - 14, y - 4, 10, 3);
+    ctx.strokeRect(x + width - 14, y - 4, 10, 3);
 
     // Eyes
     ctx.fillStyle = COLORS.playerEye;
@@ -128,7 +160,7 @@ export class Player {
     ctx.fillRect(x + 22, y + 5, 4, 4);
 
     // Intense eyebrows (Shelby stare)
-    ctx.strokeStyle = "#1a1a1a";
+    ctx.strokeStyle = "#121315";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(x + 12, y + 2);

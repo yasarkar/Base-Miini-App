@@ -46,52 +46,52 @@ export function GameOverScreen({ score, onRestart }: GameOverScreenProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 fade-in">
-      <div className="bg-[#16213e] rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl border border-[#1f3056]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 fade-in">
+      <div className="bg-birmingham-dark border-2 border-garrison-amber p-6 max-w-sm w-full mx-4 shadow-[0_0_20px_rgba(180,83,9,0.5)]">
         {/* Game Over Header */}
-        <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold text-[#c9a84c] mb-1">GAME OVER</h2>
-          <p className="text-gray-400 text-sm">Thomas Shelby was caught</p>
+        <div className="text-center mb-4 border-b border-garrison-amber/20 pb-3">
+          <h2 className="text-2xl font-bold text-garrison-amber mb-1 font-serif tracking-wider">GAME OVER</h2>
+          <p className="text-gray-500 text-xs uppercase tracking-widest font-retro">Shelby was caught</p>
         </div>
 
         {/* Score Display */}
-        <div className="text-center mb-4">
-          <div className="text-4xl font-bold text-white font-mono">
+        <div className="text-center mb-4 bg-garrison-wood/40 border border-garrison-amber/10 py-3 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+          <div className="text-3xl font-bold text-white font-retro">
             {score.toLocaleString()}
           </div>
-          <p className="text-gray-400 text-xs mt-1">final score</p>
+          <p className="text-gray-400 text-[9px] uppercase tracking-widest font-retro mt-1.5">final score</p>
         </div>
 
         {/* Score Submission Status */}
-        <div className="text-center mb-3">
+        <div className="text-center mb-3 h-4">
           {isSubmitting && (
-            <p className="text-xs text-yellow-400 pulse">Submitting score...</p>
+            <p className="text-[10px] text-garrison-amber font-retro pulse">Submitting ledger...</p>
           )}
           {submitError && (
-            <p className="text-xs text-red-400">Score submission failed (offline mode)</p>
+            <p className="text-[10px] text-red-500 font-retro">Ledger failed (offline)</p>
           )}
           {submitSuccess && (
-            <p className="text-xs text-green-400">✓ Score saved to Garrison!</p>
+            <p className="text-[10px] text-green-500 font-retro">✓ Score saved to Garrison</p>
           )}
         </div>
 
         {/* Flat Cap Unlock */}
         {hasUnlockedFlatCap && (
-          <div className="text-center mb-3 p-2 bg-[#1a1a2e] rounded-lg border border-[#c9a84c]/30">
-            <p className="text-[#c9a84c] text-sm font-semibold">
-              🎩 Pixel Flat Cap Unlocked!
+          <div className="text-center mb-4 p-2 bg-garrison-wood border border-garrison-amber/30">
+            <p className="text-garrison-amber text-xs font-semibold font-retro">
+              🎩 Flat Cap Unlocked!
             </p>
-            <p className="text-gray-400 text-xs">
-              Thomas Shelby now wears his signature cap
+            <p className="text-gray-400 text-[10px] mt-1">
+              Thomas Shelby is now wearing his signature cap
             </p>
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className="space-y-2 mb-4">
+        <div className="space-y-2.5 mb-5">
           <button
             onClick={onRestart}
-            className="w-full px-4 py-2.5 rounded-lg text-sm font-bold bg-[#c9a84c] text-[#1a1a2e] hover:bg-[#d4b85a] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#c9a84c]/50"
+            className="w-full px-4 py-3 rounded-none text-xs font-retro tracking-widest uppercase text-birmingham-dark bg-garrison-amber hover:bg-yellow-600 transition-all duration-200 focus:outline-none shadow-[0_2px_10px_rgba(180,83,9,0.2)]"
           >
             🔄 Play Again
           </button>
@@ -105,7 +105,7 @@ export function GameOverScreen({ score, onRestart }: GameOverScreenProps) {
         </div>
 
         {/* Leaderboard */}
-        <div className="border-t border-[#1f3056] pt-3">
+        <div className="border-t border-garrison-amber/20 pt-4">
           <Leaderboard />
         </div>
       </div>

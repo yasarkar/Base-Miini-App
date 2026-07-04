@@ -71,53 +71,90 @@ export class ObstacleManager {
 
     ctx.save();
 
-    if (type === "pipe") {
-      // Factory pipe
-      ctx.fillStyle = COLORS.pipe;
-      ctx.fillRect(x, y, width, height);
+    // Distressed dark border outline
+    ctx.strokeStyle = "#121315";
+    ctx.lineWidth = 2.5;
 
-      // Pipe highlight
-      ctx.fillStyle = COLORS.pipeHighlight;
-      ctx.fillRect(x + 4, y, 6, height);
+    if (type === "pipe") {
+      // Factory metallic pipe with linear steel-to-amber gradients
+      const pipeGrad = ctx.createLinearGradient(x, y, x + width, y);
+      pipeGrad.addColorStop(0, "#2d241e");
+      pipeGrad.addColorStop(0.3, "#4b5563");
+      pipeGrad.addColorStop(0.7, "#b45309");
+      pipeGrad.addColorStop(1, "#121315");
+      ctx.fillStyle = pipeGrad;
+      
+      ctx.fillRect(x, y, width, height);
+      ctx.strokeRect(x, y, width, height);
 
       // Pipe top rim
-      ctx.fillStyle = "#6c7a7d";
+      const rimGrad = ctx.createLinearGradient(x - 3, y, x + width + 3, y);
+      rimGrad.addColorStop(0, "#121315");
+      rimGrad.addColorStop(0.5, "#4b5563");
+      rimGrad.addColorStop(1, "#121315");
+      ctx.fillStyle = rimGrad;
       ctx.fillRect(x - 3, y - 4, width + 6, 8);
+      ctx.strokeRect(x - 3, y - 4, width + 6, 8);
 
       // Pipe rivets
-      ctx.fillStyle = "#5a6869";
+      ctx.fillStyle = "#b45309";
       for (let i = 0; i < 3; i++) {
         ctx.beginPath();
-        ctx.arc(x + width / 2, y + 10 + i * 15, 3, 0, Math.PI * 2);
+        ctx.arc(x + width / 2, y + 12 + i * 18, 3, 0, Math.PI * 2);
         ctx.fill();
+        ctx.stroke();
       }
 
       // Steam effect
-      ctx.fillStyle = "rgba(200, 200, 200, 0.15)";
+      ctx.fillStyle = "rgba(75, 85, 99, 0.15)";
       ctx.beginPath();
       ctx.arc(x + width / 2, y - 10, 12, 0, Math.PI * 2);
       ctx.fill();
     } else {
-      // Police barricade
-      ctx.fillStyle = COLORS.barricade;
+      // Brick stone blockade roadblock
+      const brickGrad = ctx.createLinearGradient(x, y, x, y + height);
+      brickGrad.addColorStop(0, "#2d241e");
+      brickGrad.addColorStop(1, "#121315");
+      ctx.fillStyle = brickGrad;
+      
       ctx.fillRect(x, y, width, height);
+      ctx.strokeRect(x, y, width, height);
 
-      // Stripes
-      ctx.fillStyle = COLORS.barricadeStripe;
-      for (let i = 0; i < 3; i++) {
-        ctx.fillRect(x + 4, y + 4 + i * 12, width - 8, 6);
+      // Mortar lines
+      ctx.strokeStyle = "#4b5563";
+      ctx.lineWidth = 1.5;
+      
+      // Horizontal joints
+      const rowH = 10;
+      for (let by = y + rowH; by < y + height; by += rowH) {
+        ctx.beginPath();
+        ctx.moveTo(x, by);
+        ctx.lineTo(x + width, by);
+        ctx.stroke();
+      }
+      
+      // Vertical joints (alternating offset)
+      let rowIndex = 0;
+      for (let by = y; by < y + height; by += rowH) {
+        const rowOffset = rowIndex % 2 === 0 ? 0 : 10;
+        for (let bx = x + rowOffset; bx < x + width; bx += 20) {
+          ctx.beginPath();
+          ctx.moveTo(bx, by);
+          ctx.lineTo(bx, by + rowH);
+          ctx.stroke();
+        }
+        rowIndex++;
       }
 
-      // Barricade legs
-      ctx.fillStyle = "#8e44ad";
-      ctx.fillRect(x + 4, y + height, 6, 8);
-      ctx.fillRect(x + width - 10, y + height, 6, 8);
-
-      // "POLICE" text
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 8px monospace";
+      // Stop text
+      ctx.font = "bold 9px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("POLICE", x + width / 2, y + height - 8);
+      
+      ctx.fillStyle = "#121315";
+      ctx.fillText("STOP", x + width / 2 + 1, y + height - 8 + 1);
+      
+      ctx.fillStyle = "#b45309";
+      ctx.fillText("STOP", x + width / 2, y + height - 8);
     }
 
     ctx.restore();
