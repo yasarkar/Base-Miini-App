@@ -1,5 +1,5 @@
 // Mock implementation of @base-account-kit/react
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits } from 'viem';
 
@@ -92,13 +92,15 @@ export function BasePayButton({ paymentOptions, onSuccess, onError, disabled }) 
   };
 
   // Handle confirmation
-  if (isConfirmed && txHash) {
-    setIsPaying(false);
-    setTxHash(null);
-    if (onSuccess) {
-      onSuccess();
+  useEffect(() => {
+    if (isConfirmed && txHash) {
+      setIsPaying(false);
+      setTxHash(null);
+      if (onSuccess) {
+        onSuccess();
+      }
     }
-  }
+  }, [isConfirmed, txHash, onSuccess]);
 
   const isPending = isPaying || isConfirming;
 
