@@ -1,6 +1,7 @@
 "use client";
 
 import { FARCASTER_CONFIG } from "@/lib/constants";
+import { composeCastUrl } from "@/lib/farcaster";
 
 interface ShareCastButtonProps {
   score: number;
@@ -9,8 +10,8 @@ interface ShareCastButtonProps {
 export function ShareCastButton({ score }: ShareCastButtonProps) {
   const handleShare = () => {
     const appUrl = FARCASTER_CONFIG.appUrl;
-    const text = `I just scored ${score} in Shelby’s Ledger: Birmingham Escape! Can you beat my record in the Garrison? 🏃💨 ${appUrl}`;
-    const castUrl = `https://farcaster.xyz/~/compose?text=${encodeURIComponent(text)}`;
+    const text = `I just scored ${score} in Shelby’s Ledger: Birmingham Escape! Can you beat my record in the Garrison? 🏃💨`;
+    const castUrl = composeCastUrl(text, appUrl);
     window.open(castUrl, "_blank", "noopener,noreferrer");
   };
 
