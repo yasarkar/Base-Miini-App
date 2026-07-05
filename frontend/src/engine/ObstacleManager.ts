@@ -71,17 +71,18 @@ export class ObstacleManager {
 
     ctx.save();
 
-    // Distressed dark border outline
-    ctx.strokeStyle = "#121315";
+    // Charcoal outline
+    ctx.strokeStyle = "#09090b";
     ctx.lineWidth = 2.5;
 
     if (type === "pipe") {
-      // Factory metallic pipe with linear steel-to-amber gradients
+      // Iron factory venting pipe with linear gradients
       const pipeGrad = ctx.createLinearGradient(x, y, x + width, y);
-      pipeGrad.addColorStop(0, "#2d241e");
-      pipeGrad.addColorStop(0.3, "#4b5563");
-      pipeGrad.addColorStop(0.7, "#b45309");
-      pipeGrad.addColorStop(1, "#121315");
+      pipeGrad.addColorStop(0, "#0d0d10");
+      pipeGrad.addColorStop(0.25, "#3a3f4a");
+      pipeGrad.addColorStop(0.55, "#c59b27"); // polished brass highlight
+      pipeGrad.addColorStop(0.85, "#1f1814"); // rust shadow
+      pipeGrad.addColorStop(1, "#070709");
       ctx.fillStyle = pipeGrad;
       
       ctx.fillRect(x, y, width, height);
@@ -89,72 +90,103 @@ export class ObstacleManager {
 
       // Pipe top rim
       const rimGrad = ctx.createLinearGradient(x - 3, y, x + width + 3, y);
-      rimGrad.addColorStop(0, "#121315");
+      rimGrad.addColorStop(0, "#09090b");
       rimGrad.addColorStop(0.5, "#4b5563");
-      rimGrad.addColorStop(1, "#121315");
+      rimGrad.addColorStop(1, "#09090b");
       ctx.fillStyle = rimGrad;
-      ctx.fillRect(x - 3, y - 4, width + 6, 8);
-      ctx.strokeRect(x - 3, y - 4, width + 6, 8);
+      ctx.fillRect(x - 3, y - 5, width + 6, 9);
+      ctx.strokeRect(x - 3, y - 5, width + 6, 9);
 
-      // Pipe rivets
-      ctx.fillStyle = "#b45309";
-      for (let i = 0; i < 3; i++) {
+      // Rusty copper rivets along the pipe column
+      ctx.fillStyle = "#a07415";
+      for (let i = 0; i < 4; i++) {
         ctx.beginPath();
-        ctx.arc(x + width / 2, y + 12 + i * 18, 3, 0, Math.PI * 2);
+        ctx.arc(x + width / 2, y + 10 + i * 16, 2.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
       }
 
-      // Steam effect
-      ctx.fillStyle = "rgba(75, 85, 99, 0.15)";
-      ctx.beginPath();
-      ctx.arc(x + width / 2, y - 10, 12, 0, Math.PI * 2);
-      ctx.fill();
-    } else {
-      // Brick stone blockade roadblock
-      const brickGrad = ctx.createLinearGradient(x, y, x, y + height);
-      brickGrad.addColorStop(0, "#2d241e");
-      brickGrad.addColorStop(1, "#121315");
-      ctx.fillStyle = brickGrad;
-      
-      ctx.fillRect(x, y, width, height);
-      ctx.strokeRect(x, y, width, height);
-
-      // Mortar lines
-      ctx.strokeStyle = "#4b5563";
-      ctx.lineWidth = 1.5;
-      
-      // Horizontal joints
-      const rowH = 10;
-      for (let by = y + rowH; by < y + height; by += rowH) {
+      // Dynamic animated venting steam puff loop
+      const time = performance.now() * 0.003;
+      for (let i = 0; i < 3; i++) {
+        const offset = (time + i * 0.45) % 1.25;
+        const size = 11 + offset * 16;
+        const alpha = (1.25 - offset) * 0.28;
+        ctx.fillStyle = `rgba(130, 135, 145, ${alpha})`;
         ctx.beginPath();
-        ctx.moveTo(x, by);
-        ctx.lineTo(x + width, by);
-        ctx.stroke();
+        ctx.arc(
+          x + width / 2 - offset * 18,
+          y - 8 - offset * 28,
+          size,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
       }
-      
-      // Vertical joints (alternating offset)
-      let rowIndex = 0;
-      for (let by = y; by < y + height; by += rowH) {
-        const rowOffset = rowIndex % 2 === 0 ? 0 : 10;
-        for (let bx = x + rowOffset; bx < x + width; bx += 20) {
-          ctx.beginPath();
-          ctx.moveTo(bx, by);
-          ctx.lineTo(bx, by + rowH);
-          ctx.stroke();
-        }
-        rowIndex++;
-      }
+    } else {
+      // 1920s police warning barricade
+      // Barricade legs/posts (weathered wood)
+      ctx.fillStyle = "#221a15"; // Garrison wood
+      ctx.fillRect(x + 4, y, 6, height);
+      ctx.strokeRect(x + 4, y, 6, height);
+      ctx.fillRect(x + width - 10, y, 6, height);
+      ctx.strokeRect(x + width - 10, y, 6, height);
 
-      // Stop text
-      ctx.font = "bold 9px monospace";
+      // Horizontal plank
+      const plankH = 20;
+      const plankY = y + 8;
+      ctx.fillStyle = "#0f1012";
+      ctx.fillRect(x, plankY, width, plankH);
+      ctx.strokeRect(x, plankY, width, plankH);
+
+      // 1920s hazard stripes on plank (gold and black stripes)
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x + 1, plankY + 1, width - 2, plankH - 2);
+      ctx.clip();
+      
+      ctx.fillStyle = "#c59b27"; // Garrison gold stripes
+      for (let sx = x - 20; sx < x + width + 20; sx += 18) {
+        ctx.beginPath();
+        ctx.moveTo(sx, plankY);
+        ctx.lineTo(sx + 10, plankY);
+        ctx.lineTo(sx - 2, plankY + plankH);
+        ctx.lineTo(sx - 12, plankY + plankH);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // Rusty center plate (STOP sign)
+      const signW = 32;
+      const signH = 14;
+      const signX = x + width / 2 - signW / 2;
+      const signY = plankY + plankH / 2 - signH / 2;
+      
+      const signGrad = ctx.createLinearGradient(signX, signY, signX, signY + signH);
+      signGrad.addColorStop(0, "#a0281c"); // deep blood/rust red
+      signGrad.addColorStop(1, "#5a0f0a");
+      ctx.fillStyle = signGrad;
+      ctx.fillRect(signX, signY, signW, signH);
+      ctx.strokeRect(signX, signY, signW, signH);
+
+      // Tiny sign rivets
+      ctx.fillStyle = "#c59b27";
+      ctx.beginPath();
+      ctx.arc(signX + 1.5, signY + 1.5, 1, 0, Math.PI * 2);
+      ctx.arc(signX + signW - 1.5, signY + 1.5, 1, 0, Math.PI * 2);
+      ctx.arc(signX + 1.5, signY + signH - 1.5, 1, 0, Math.PI * 2);
+      ctx.arc(signX + signW - 1.5, signY + signH - 1.5, 1, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Warning text (HALT)
+      ctx.font = "bold 8px monospace";
       ctx.textAlign = "center";
+      ctx.fillStyle = "#09090b";
+      ctx.fillText("HALT", x + width / 2 + 0.5, signY + signH - 3.5 + 0.5);
       
-      ctx.fillStyle = "#121315";
-      ctx.fillText("STOP", x + width / 2 + 1, y + height - 8 + 1);
-      
-      ctx.fillStyle = "#b45309";
-      ctx.fillText("STOP", x + width / 2, y + height - 8);
+      ctx.fillStyle = "#e3e3e8";
+      ctx.fillText("HALT", x + width / 2, signY + signH - 3.5);
     }
 
     ctx.restore();

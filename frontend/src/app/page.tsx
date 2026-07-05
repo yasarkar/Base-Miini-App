@@ -55,9 +55,13 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-[#0f0f12] text-[#e0e0e0] p-4 relative overflow-hidden">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-[#0d0d0f] text-[#e3e3e8] p-4 relative overflow-hidden">
+      {/* Cinematic Overlays */}
+      <div className="film-grain" />
+      <div className="cinematic-vignette" />
+
       {/* Decorative background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.005)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.005)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.003)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.003)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="relative w-full max-w-[800px] z-10">
         {gamePhase === "start" ? (
@@ -65,18 +69,18 @@ export default function Home() {
         ) : (
           <div className="flex flex-col items-center">
             {/* Header */}
-            <div className="text-center mb-4">
-              <h1 className="text-2xl font-serif font-extrabold text-[#c9a84c] tracking-widest uppercase">
+            <div className="text-center mb-5 select-none">
+              <h1 className="text-3xl font-serif font-extrabold text-metallic-gold tracking-[0.25em] uppercase">
                 SHELBY'S LEDGER
               </h1>
-              <p className="text-xs text-gray-500 uppercase tracking-widest font-mono mt-0.5">
+              <p className="text-[10px] text-garrison-amber/60 uppercase tracking-[0.3em] font-mono mt-1">
                 Birmingham Escape
               </p>
             </div>
 
             {/* Game Container */}
             <div
-              className="relative w-full overflow-hidden rounded-xl border border-[#c9a84c]/20 shadow-2xl bg-[#1a1a2e]"
+              className="relative w-full overflow-hidden rounded-none border-2 border-garrison-amber/30 shadow-[0_0_30px_rgba(0,0,0,0.8)] bg-birmingham-dark"
               style={{ maxHeight: "400px", aspectRatio: "2 / 1" }}
             >
               <GameCanvas
@@ -87,14 +91,14 @@ export default function Home() {
             </div>
 
             {/* Controls hint */}
-            <div className="text-center mt-4">
-              <p className="text-xs text-gray-500 font-mono">
+            <div className="text-center mt-5">
+              <p className="text-[10px] text-gray-500 font-mono tracking-wider">
                 Press{" "}
-                <kbd className="px-1.5 py-0.5 bg-[#16213e] border border-[#c9a84c]/20 rounded text-[#c9a84c] text-xs font-bold font-mono">
+                <kbd className="px-2 py-0.5 bg-garrison-wood border border-garrison-amber/30 rounded-none text-garrison-amber text-[9px] font-bold font-mono shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                   SPACE
                 </kbd>{" "}
                 or{" "}
-                <kbd className="px-1.5 py-0.5 bg-[#16213e] border border-[#c9a84c]/20 rounded text-[#c9a84c] text-xs font-bold font-mono">
+                <kbd className="px-2 py-0.5 bg-garrison-wood border border-garrison-amber/30 rounded-none text-garrison-amber text-[9px] font-bold font-mono shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                   ↑
                 </kbd>{" "}
                 or Tap Screen to Jump

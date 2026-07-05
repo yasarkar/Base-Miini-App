@@ -18,7 +18,7 @@ export function ShareCastButton({ score }: ShareCastButtonProps) {
   return (
     <button
       onClick={handleShare}
-      className="w-full px-4 py-3 rounded-none text-xs font-retro tracking-widest uppercase border border-garrison-amber text-garrison-amber hover:bg-garrison-amber hover:text-birmingham-dark transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-garrison-amber"
+      className="w-full px-4 py-3 rounded-none text-xs font-mono tracking-[0.18em] uppercase border border-[#8c6a12]/75 text-[#8c6a12] hover:bg-[#8c6a12] hover:text-[#f0e6d2] transition-all duration-200 focus:outline-none cursor-pointer"
     >
       📣 Share on Farcaster
     </button>

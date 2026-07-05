@@ -37,34 +37,34 @@ export function Leaderboard() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-garrison-amber font-bold text-[10px] uppercase tracking-wider font-retro">
-          Garrison Top 10
+      <div className="flex items-center justify-between mb-2 select-none">
+        <h3 className="text-[#4d3d34] font-bold text-[9px] uppercase tracking-[0.22em] font-mono">
+          Garrison Tavern Ledger
         </h3>
         <button
           onClick={refetch}
-          className="text-[9px] font-retro text-gray-500 hover:text-garrison-amber transition-colors"
+          className="text-[8px] font-mono tracking-widest text-[#8c6a12] hover:text-[#4d3d34] transition-colors font-bold cursor-pointer"
         >
           ↻ Refresh
         </button>
       </div>
 
-      <div className="space-y-1 max-h-[140px] overflow-y-auto">
+      <div className="space-y-1 max-h-[135px] overflow-y-auto pr-0.5 scrollbar-thin">
         {entries.map((entry) => (
           <div
             key={`${entry.fid}-${entry.rank}`}
-            className="flex items-center justify-between px-3 py-1.5 bg-garrison-wood/20 border border-garrison-amber/10 rounded-none"
+            className="flex items-center justify-between px-3 py-1.5 bg-[#e6d9bf]/35 border border-[#8c6a12]/15 rounded-none shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
           >
             <div className="flex items-center gap-3">
               <span
-                className={`w-6 text-center font-bold text-xs font-retro ${
+                className={`w-6 text-center font-bold text-xs font-mono ${
                   entry.rank === 1
-                    ? "text-yellow-500"
+                    ? "text-[#c59b27]"
                     : entry.rank === 2
-                    ? "text-gray-400"
+                    ? "text-gray-500"
                     : entry.rank === 3
-                    ? "text-amber-700"
-                    : "text-gray-600"
+                    ? "text-[#8c6a12]"
+                    : "text-[#5c4a3f]"
                 }`}
               >
                 {entry.rank === 1
@@ -75,11 +75,11 @@ export function Leaderboard() {
                   ? "🥉"
                   : `#${entry.rank}`}
               </span>
-              <span className="text-xs font-mono text-gray-300">
+              <span className="text-xs font-mono text-[#3a2f28] font-bold">
                 {entry.username || `FID:${entry.fid}`}
               </span>
             </div>
-            <span className="text-xs font-retro text-garrison-amber">
+            <span className="text-xs font-mono font-bold text-[#9c2a1b] tracking-wider">
               {entry.score.toLocaleString()}
             </span>
           </div>
