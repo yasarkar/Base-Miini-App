@@ -2,10 +2,10 @@ import type { Obstacle, PlayerState } from "./types";
 
 export class CollisionDetector {
   static checkCollision(player: PlayerState, obstacle: Obstacle): boolean {
-    const px = player.x + 4;
-    const py = player.y + 4;
-    const pw = player.width - 8;
-    const ph = player.height - 6;
+    const px = player.x;
+    const py = player.y;
+    const pw = player.width;
+    const ph = player.height;
 
     const ox = obstacle.x;
     const oy = obstacle.y;

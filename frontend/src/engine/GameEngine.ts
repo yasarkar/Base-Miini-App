@@ -19,6 +19,7 @@ export class GameEngine {
   private onGameOver: ((score: number) => void) | null = null;
   private onScoreUpdate: ((score: number) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
+  private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -70,7 +71,8 @@ export class GameEngine {
 
     this.canvas.addEventListener("click", handleInput);
     this.canvas.addEventListener("touchstart", handleInput, { passive: false });
-    window.addEventListener("keydown", (e: KeyboardEvent) => {
+    
+    this.keydownHandler = (e: KeyboardEvent) => {
       if (e.code === "Space" || e.code === "ArrowUp") {
         e.preventDefault();
         if (this.screen === "start") {
@@ -79,7 +81,8 @@ export class GameEngine {
           this.player.jump();
         }
       }
-    });
+    };
+    window.addEventListener("keydown", this.keydownHandler);
   }
 
   setCallbacks(onGameOver: (score: number) => void, onScoreUpdate: (score: number) => void): void {
@@ -204,6 +207,9 @@ export class GameEngine {
     }
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
+    }
+    if (this.keydownHandler) {
+      window.removeEventListener("keydown", this.keydownHandler);
     }
   }
 }
