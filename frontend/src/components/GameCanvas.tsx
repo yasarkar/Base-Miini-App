@@ -31,8 +31,6 @@ export function GameCanvas({ onGameOver, onScoreUpdate }: GameCanvasProps) {
 
     const engine = new GameEngine(canvas);
     engineRef.current = engine;
-
-    engine.setCallbacks(onGameOver, onScoreUpdate);
     
     // Auto-start the game engine loop directly
     engine.startGame();
@@ -42,6 +40,14 @@ export function GameCanvas({ onGameOver, onScoreUpdate }: GameCanvasProps) {
       engineRef.current = null;
     };
   }, []);
+
+  // Dynamically update callback references in the engine when they change,
+  // preventing closures from holding stale references without restarting the game.
+  useEffect(() => {
+    if (engineRef.current) {
+      engineRef.current.setCallbacks(onGameOver, onScoreUpdate);
+    }
+  }, [onGameOver, onScoreUpdate]);
 
   return (
     <canvas
