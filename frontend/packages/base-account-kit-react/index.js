@@ -63,7 +63,7 @@ export function BasePayButton({ paymentOptions, onSuccess, onError, disabled }) 
 
       writeContract(
         {
-          address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // Base Sepolia USDC
+          address: process.env.NEXT_PUBLIC_USDC_ADDRESS || "0x036CbD53842c5426634e7929541eC2318f3dCF7e", // Defaults to Base Sepolia USDC
           abi: USDC_ABI,
           functionName: "transfer",
           args: [paymentOptions?.to, amount],
