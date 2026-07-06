@@ -11,7 +11,11 @@ const nextConfig = {
       {
         source: "/(.*)",
         headers: [
-          { key: "X-Frame-Options", value: "DENY" },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' https://*.warpcast.com https://*.fcast.me https://warpcast.com https://fcast.me;",
+          },
           { key: "X-Content-Type-Options", value: "nosniff" },
         ],
       },
