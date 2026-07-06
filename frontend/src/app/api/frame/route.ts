@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
-    const body = await request.json();
 
     // Farcaster Frame v2 expects a signed message
     // This endpoint handles frame button clicks
-    const { trustedData, untrustedData } = body;
-
-    // Extract the button index from the frame interaction
-    const buttonIndex = untrustedData?.buttonIndex || 1;
 
     // Generate frame response based on button pressed
     const frameResponse = {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { API_CONFIG } from "@/lib/constants";
 
 export interface LeaderboardEntry {
   rank: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { GameEngine } from "@/engine/GameEngine";
 
 interface GameCanvasProps {

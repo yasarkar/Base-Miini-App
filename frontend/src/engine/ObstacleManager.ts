@@ -1,4 +1,4 @@
-import { OBSTACLE, GAME_CONFIG, COLORS } from "@/lib/constants";
+import { OBSTACLE, GAME_CONFIG } from "@/lib/constants";
 import type { Obstacle } from "./types";
 
 export class ObstacleManager {

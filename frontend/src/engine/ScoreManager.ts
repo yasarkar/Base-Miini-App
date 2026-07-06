@@ -1,4 +1,4 @@
-import { SCORE, GAME_CONFIG } from "@/lib/constants";
+import { GAME_CONFIG } from "@/lib/constants";
 import type { GameState } from "./types";
 
 export class ScoreManager {

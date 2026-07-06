@@ -1,4 +1,4 @@
-import { GAME_CONFIG, COLORS } from "@/lib/constants";
+import { GAME_CONFIG } from "@/lib/constants";
 import type { BackgroundLayer } from "./types";
 
 interface RainDrop {
