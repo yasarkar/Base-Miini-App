@@ -7,11 +7,11 @@
   "frame": {
     "version": "1",
     "name": "Shelby's Ledger: Birmingham Escape",
-    "iconUrl": "https://shelbys-ledger.vercel.app/next.svg",
+    "iconUrl": "https://shelbys-ledger.vercel.app/icon.png",
     "homeUrl": "https://shelbys-ledger.vercel.app",
     "imageUrl": "https://shelbys-ledger.vercel.app/og-image.png",
     "buttonTitle": "Play Shelby's Ledger",
-    "splashImageUrl": "https://shelbys-ledger.vercel.app/next.svg",
+    "splashImageUrl": "https://shelbys-ledger.vercel.app/icon.png",
     "splashBackgroundColor": "#1a1a2e"
   }
 }
