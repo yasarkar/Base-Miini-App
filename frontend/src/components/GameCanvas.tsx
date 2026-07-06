@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { GameEngine } from "@/engine/GameEngine";
 
 interface GameCanvasProps {
-  onGameOver: (score: number) => void;
+  onGameOver: (score: number, duration: number) => void;
   onScoreUpdate: (score: number) => void;
 }
 

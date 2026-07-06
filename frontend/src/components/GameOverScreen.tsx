@@ -9,10 +9,12 @@ import { Leaderboard } from "./Leaderboard";
 
 interface GameOverScreenProps {
   score: number;
+  duration: number;
+  sessionToken: any;
   onRestart: () => void;
 }
 
-export function GameOverScreen({ score, onRestart }: GameOverScreenProps) {
+export function GameOverScreen({ score, duration, sessionToken, onRestart }: GameOverScreenProps) {
   const { fid, username } = useFarcasterSDK();
   const { submitScore, isSubmitting, submitError, submitSuccess } = useSubmitScore();
   const [hasUnlockedFlatCap, setHasUnlockedFlatCap] = useState(false);
@@ -31,10 +33,10 @@ export function GameOverScreen({ score, onRestart }: GameOverScreenProps) {
   // Auto-submit score on mount
   useEffect(() => {
     if (score > 0 && !scoreSubmitted) {
-      submitScore({ fid, username, score });
+      submitScore({ fid, username, score, duration, sessionToken });
       setScoreSubmitted(true);
     }
-  }, [score, fid, username, submitScore, scoreSubmitted]);
+  }, [score, duration, sessionToken, fid, username, submitScore, scoreSubmitted]);
 
   const handlePaymentSuccess = () => {
     try {

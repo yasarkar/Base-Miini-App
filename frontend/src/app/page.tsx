@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { StartScreen } from "@/components/StartScreen";
 import { GameCanvas } from "@/components/GameCanvas";
 import { GameOverScreen } from "@/components/GameOverScreen";
@@ -12,13 +12,31 @@ export default function Home() {
   const { isLoading: sdkLoading } = useFarcasterSDK();
   const [gamePhase, setGamePhase] = useState<GamePhase>("start");
   const [finalScore, setFinalScore] = useState(0);
+  const [finalDuration, setFinalDuration] = useState(0);
   const [gameKey, setGameKey] = useState(0);
+  const [sessionToken, setSessionToken] = useState<any>(null);
+
+  const fetchSession = useCallback(async () => {
+    try {
+      const res = await fetch("/api/score");
+      if (res.ok) {
+        const data = await res.json();
+        setSessionToken(data);
+      }
+    } catch (e) {
+      console.error("Failed to fetch session token:", e);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSession();
+  }, [fetchSession]);
 
   const handleStartGame = useCallback(() => {
     setGamePhase("playing");
   }, []);
 
-  const handleGameOver = useCallback((score: number) => {
+  const handleGameOver = useCallback((score: number, duration: number) => {
     // Save high score locally
     try {
       const stored = localStorage.getItem("shelby_high_score");
@@ -30,6 +48,7 @@ export default function Home() {
       console.error("Failed to save high score:", e);
     }
     setFinalScore(score);
+    setFinalDuration(duration);
     setGamePhase("gameover");
   }, []);
 
@@ -41,7 +60,9 @@ export default function Home() {
     setGameKey((prev) => prev + 1);
     setGamePhase("playing");
     setFinalScore(0);
-  }, []);
+    setFinalDuration(0);
+    fetchSession();
+  }, [fetchSession]);
 
   if (sdkLoading) {
     return (
@@ -110,7 +131,12 @@ export default function Home() {
 
       {/* Game Over Overlay */}
       {gamePhase === "gameover" && (
-        <GameOverScreen score={finalScore} onRestart={handleRestart} />
+        <GameOverScreen
+          score={finalScore}
+          duration={finalDuration}
+          sessionToken={sessionToken}
+          onRestart={handleRestart}
+        />
       )}
     </main>
   );

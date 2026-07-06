@@ -16,7 +16,8 @@ export class GameEngine {
   private lastTime: number = 0;
   private animationFrameId: number | null = null;
   private screen: GameScreen = "start";
-  private onGameOver: ((score: number) => void) | null = null;
+  private gameStartTime: number = 0;
+  private onGameOver: ((score: number, duration: number) => void) | null = null;
   private onScoreUpdate: ((score: number) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
@@ -85,7 +86,7 @@ export class GameEngine {
     window.addEventListener("keydown", this.keydownHandler);
   }
 
-  setCallbacks(onGameOver: (score: number) => void, onScoreUpdate: (score: number) => void): void {
+  setCallbacks(onGameOver: (score: number, duration: number) => void, onScoreUpdate: (score: number) => void): void {
     this.onGameOver = onGameOver;
     this.onScoreUpdate = onScoreUpdate;
   }
@@ -96,7 +97,8 @@ export class GameEngine {
     this.obstacles.reset();
     this.background.reset();
     this.scoreManager.reset();
-    this.lastTime = performance.now();
+    this.gameStartTime = performance.now();
+    this.lastTime = this.gameStartTime;
     this.loop(this.lastTime);
   }
 
@@ -129,7 +131,8 @@ export class GameEngine {
       this.screen = "gameover";
       this.scoreManager.gameOver();
       if (this.onGameOver) {
-        this.onGameOver(this.scoreManager.getScore());
+        const duration = (performance.now() - this.gameStartTime) / 1000;
+        this.onGameOver(this.scoreManager.getScore(), duration);
       }
     }
 

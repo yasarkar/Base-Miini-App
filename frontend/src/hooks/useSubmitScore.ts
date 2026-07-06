@@ -6,6 +6,8 @@ interface SubmitScoreParams {
   fid: number;
   username: string;
   score: number;
+  duration: number;
+  sessionToken: any;
 }
 
 export function useSubmitScore() {
@@ -13,7 +15,7 @@ export function useSubmitScore() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const submitScore = useCallback(async ({ fid, username, score }: SubmitScoreParams) => {
+  const submitScore = useCallback(async ({ fid, username, score, duration, sessionToken }: SubmitScoreParams) => {
     try {
       setIsSubmitting(true);
       setSubmitError(null);
@@ -24,7 +26,7 @@ export function useSubmitScore() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fid, username, score }),
+        body: JSON.stringify({ fid, username, score, duration, sessionToken }),
       });
 
       if (!response.ok) {
