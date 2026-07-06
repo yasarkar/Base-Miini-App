@@ -16,19 +16,6 @@ export function GameCanvas({ onGameOver, onScoreUpdate }: GameCanvasProps) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // CRITICAL: Call sdk.actions.ready() immediately on mount to bypass Farcaster native splash screen
-    const signalReady = async () => {
-      try {
-        const sdkModule = await import("@farcaster/miniapp-sdk");
-        const sdk = sdkModule.default || sdkModule;
-        sdk.actions.ready();
-        console.log("[GameCanvas] sdk.actions.ready() executed successfully");
-      } catch (err) {
-        console.warn("[GameCanvas] Failed to call sdk.actions.ready():", err);
-      }
-    };
-    signalReady();
-
     const engine = new GameEngine(canvas);
     engineRef.current = engine;
     
