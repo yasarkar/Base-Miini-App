@@ -24,7 +24,7 @@ export class BackgroundRenderer {
   private layers: BackgroundLayer[] = [];
   private canvasWidth: number;
   private canvasHeight: number;
-  private buildings: Array<{ x: number; width: number; height: number; color: string }> = [];
+  private buildings: Array<{ x: number; width: number; height: number; color: string; hasChimney: boolean }> = [];
   private clouds: Array<{ x: number; y: number; scale: number; speed: number }> = [];
   private rainDrops: RainDrop[] = [];
   private sparks: Spark[] = [];
@@ -61,6 +61,7 @@ export class BackgroundRenderer {
         width,
         height,
         color: `hsl(220, 12%, ${5 + Math.random() * 7}%)`, // deeper dark coal color
+        hasChimney: i % 3 === 0,
       });
     }
   }
@@ -141,6 +142,7 @@ export class BackgroundRenderer {
         building.width = 50 + Math.random() * 70;
         building.height = 70 + Math.random() * 130;
         building.color = `hsl(220, 12%, ${5 + Math.random() * 7}%)`;
+        building.hasChimney = Math.random() < 0.33;
       }
     }
 
@@ -199,7 +201,7 @@ export class BackgroundRenderer {
     }
 
     // Mid-ground Factory buildings (0.4x layer)
-    this.buildings.forEach((building, index) => {
+    this.buildings.forEach((building) => {
       ctx.fillStyle = building.color;
       ctx.fillRect(building.x, groundY - building.height, building.width, building.height);
 
@@ -225,7 +227,7 @@ export class BackgroundRenderer {
       }
 
       // Chimney stack
-      if (index % 3 === 0) {
+      if (building.hasChimney) {
         const stackW = 8;
         const stackH = 30;
         const stackX = building.x + building.width / 2 - stackW / 2;

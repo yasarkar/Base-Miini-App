@@ -18,15 +18,6 @@ export class ObstacleManager {
   }
 
   update(deltaTime: number, speed: number): void {
-    // Spawn new obstacles
-    this.spawnTimer += deltaTime;
-    const interval = Math.max(0.8, GAME_CONFIG.obstacleSpawnInterval - speed * 0.001);
-
-    if (this.spawnTimer >= interval) {
-      this.spawnTimer = 0;
-      this.spawnObstacle();
-    }
-
     // Move obstacles
     for (const obstacle of this.obstacles) {
       obstacle.x -= speed * deltaTime;
@@ -34,6 +25,31 @@ export class ObstacleManager {
 
     // Remove off-screen obstacles
     this.obstacles = this.obstacles.filter((o) => o.x + o.width > -50);
+
+    // Spawn new obstacles
+    this.spawnTimer += deltaTime;
+    const interval = Math.max(0.8, GAME_CONFIG.obstacleSpawnInterval - speed * 0.001);
+
+    let canSpawn = false;
+    if (this.spawnTimer >= interval) {
+      canSpawn = true;
+    }
+
+    // Apply minGap and maxGap constraints if there are existing obstacles
+    if (this.obstacles.length > 0) {
+      const lastObstacle = this.obstacles[this.obstacles.length - 1];
+      const gap = this.canvasWidth - (lastObstacle.x + lastObstacle.width);
+      if (gap < OBSTACLE.minGap) {
+        canSpawn = false; // Too close, delay spawning
+      } else if (gap > OBSTACLE.maxGap) {
+        canSpawn = true; // Too far, force spawn to keep game engaging
+      }
+    }
+
+    if (canSpawn) {
+      this.spawnTimer = 0;
+      this.spawnObstacle();
+    }
   }
 
   private spawnObstacle(): void {

@@ -21,6 +21,7 @@ export class GameEngine {
   private onScoreUpdate: ((score: number) => void) | null = null;
   private resizeHandler: (() => void) | null = null;
   private keydownHandler: ((e: KeyboardEvent) => void) | null = null;
+  private canvasInputHandler: ((e: Event) => void) | null = null;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -61,7 +62,7 @@ export class GameEngine {
   }
 
   private setupInput(): void {
-    const handleInput = (e: Event) => {
+    this.canvasInputHandler = (e: Event) => {
       e.preventDefault();
       if (this.screen === "start") {
         this.startGame();
@@ -70,8 +71,8 @@ export class GameEngine {
       }
     };
 
-    this.canvas.addEventListener("click", handleInput);
-    this.canvas.addEventListener("touchstart", handleInput, { passive: false });
+    this.canvas.addEventListener("click", this.canvasInputHandler);
+    this.canvas.addEventListener("touchstart", this.canvasInputHandler, { passive: false });
     
     this.keydownHandler = (e: KeyboardEvent) => {
       if (e.code === "Space" || e.code === "ArrowUp") {
@@ -92,6 +93,10 @@ export class GameEngine {
   }
 
   startGame(): void {
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
     this.screen = "playing";
     this.player.reset(this.canvas.height);
     this.obstacles.reset();
@@ -103,6 +108,10 @@ export class GameEngine {
   }
 
   private loop = (currentTime: number): void => {
+    if (this.screen !== "playing") {
+      this.animationFrameId = null;
+      return;
+    }
     const deltaTime = Math.min((currentTime - this.lastTime) / 1000, 0.05);
     this.lastTime = currentTime;
 
@@ -213,6 +222,10 @@ export class GameEngine {
     }
     if (this.keydownHandler) {
       window.removeEventListener("keydown", this.keydownHandler);
+    }
+    if (this.canvasInputHandler) {
+      this.canvas.removeEventListener("click", this.canvasInputHandler);
+      this.canvas.removeEventListener("touchstart", this.canvasInputHandler);
     }
   }
 }
