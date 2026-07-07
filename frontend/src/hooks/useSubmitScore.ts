@@ -10,12 +10,26 @@ interface SubmitScoreParams {
   sessionToken: any;
 }
 
+// Memory cache to prevent duplicate client-side submissions for the same session ID
+const submittedSessionIds = new Set<string>();
+
 export function useSubmitScore() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const submitScore = useCallback(async ({ fid, username, score, duration, sessionToken }: SubmitScoreParams) => {
+    const sessionId = sessionToken?.sessionId;
+    
+    // Prevent double submission for the same session
+    if (sessionId && submittedSessionIds.has(sessionId)) {
+      return false;
+    }
+    
+    if (sessionId) {
+      submittedSessionIds.add(sessionId);
+    }
+
     try {
       setIsSubmitting(true);
       setSubmitError(null);
