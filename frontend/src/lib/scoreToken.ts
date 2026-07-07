@@ -1,12 +1,6 @@
 import crypto from "crypto";
 
-const rawSecret = process.env.SCORE_SIGNING_SECRET;
-
-if (!rawSecret && process.env.NODE_ENV === "production") {
-  throw new Error("CRITICAL SECURITY ERROR: SCORE_SIGNING_SECRET environment variable is not configured in production!");
-}
-
-const SECRET = rawSecret || "birmingham_shelby_secret_key_1919_ledger_dev";
+const SECRET = process.env.SCORE_SIGNING_SECRET || "birmingham_shelby_secret_key_1919_ledger_dev";
 
 export interface GameSession {
   sessionId: string;
@@ -18,6 +12,9 @@ export interface GameSession {
  * Creates a new signed game session token.
  */
 export function createGameSession(): GameSession {
+  if (!process.env.SCORE_SIGNING_SECRET && process.env.NODE_ENV === "production") {
+    throw new Error("CRITICAL SECURITY ERROR: SCORE_SIGNING_SECRET environment variable is not configured in production!");
+  }
   const sessionId = crypto.randomUUID();
   const timestamp = Date.now();
   const dataToSign = `${sessionId}:${timestamp}`;
@@ -37,6 +34,9 @@ export function createGameSession(): GameSession {
  * Verifies that the game session was signed by us and has not expired.
  */
 export function verifyGameSession(session: GameSession): boolean {
+  if (!process.env.SCORE_SIGNING_SECRET && process.env.NODE_ENV === "production") {
+    throw new Error("CRITICAL SECURITY ERROR: SCORE_SIGNING_SECRET environment variable is not configured in production!");
+  }
   if (!session || !session.sessionId || !session.timestamp || !session.signature) {
     return false;
   }
