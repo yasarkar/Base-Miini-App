@@ -106,7 +106,3 @@ Copy `.env.example` to `.env.local` and configure:
 - **Web3:** Wagmi, Viem, @farcaster/miniapp-sdk
 - **Backend:** Spring Boot 3.2, JPA, H2/PostgreSQL
 - **Deployment:** Vercel (frontend), Railway/Render (backend)
-
-## 📄 License
-
-MIT
