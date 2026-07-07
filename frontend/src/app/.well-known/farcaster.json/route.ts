@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shelbys-ledger.vercel.app'
+  let appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://shelbys-ledger.vercel.app'
+  
+  // Enforce production URL in production if localhost is set in env
+  if (appUrl.includes('localhost') && process.env.NODE_ENV === 'production') {
+    appUrl = 'https://shelbys-ledger.vercel.app'
+  }
 
   return NextResponse.json({
     accountAssociation: {
