@@ -16,6 +16,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+      settings:
+        web-allow-others: false
 
   jpa:
     hibernate:
@@ -48,4 +50,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+
+app:
+  api-key: ${BACKEND_API_KEY}

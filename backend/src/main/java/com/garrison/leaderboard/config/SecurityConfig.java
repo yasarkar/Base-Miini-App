@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfig implements WebMvcConfigurer {
 
-    @Value("${app.api-key:dev-api-key-change-in-production}")
+    @Value("${app.api-key}")
     private String apiKey;
 
     @Override

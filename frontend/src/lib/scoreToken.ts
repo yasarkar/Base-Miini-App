@@ -1,6 +1,12 @@
 import crypto from "crypto";
 
-const SECRET = process.env.SCORE_SIGNING_SECRET || "birmingham_shelby_secret_key_1919_ledger";
+const rawSecret = process.env.SCORE_SIGNING_SECRET;
+
+if (!rawSecret && process.env.NODE_ENV === "production") {
+  throw new Error("CRITICAL SECURITY ERROR: SCORE_SIGNING_SECRET environment variable is not configured in production!");
+}
+
+const SECRET = rawSecret || "birmingham_shelby_secret_key_1919_ledger_dev";
 
 export interface GameSession {
   sessionId: string;
