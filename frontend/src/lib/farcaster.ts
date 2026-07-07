@@ -54,8 +54,8 @@ export function signalReady(): void {
 
 export function composeCastUrl(text: string, link?: string): string {
   const encodedText = encodeURIComponent(text);
-  const encodedLink = link ? encodeURIComponent(`\n\n${link}`) : "";
-  return `https://warpcast.com/~/compose?text=${encodedText}${encodedLink}&embeds[]=`;
+  const encodedLink = link ? `&embeds[]=${encodeURIComponent(link)}` : "";
+  return `https://warpcast.com/~/compose?text=${encodedText}${encodedLink}`;
 }
 
 export function getFarcasterContext(): any {

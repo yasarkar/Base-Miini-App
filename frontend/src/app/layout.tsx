@@ -24,7 +24,10 @@ const cinzel = Cinzel({
   subsets: ["latin"],
 });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shelbys-ledger.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
   title: "Shelby's Ledger: Birmingham Escape",
   description:
     "A 2D infinite runner game featuring Thomas Shelby. Dodge factory pipes and police blockades through the streets of Birmingham.",
@@ -35,10 +38,20 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   other: {
-    "fc:frame": "vNext",
-    "fc:frame:image": "https://shelbys-ledger.vercel.app/og-image.png",
-    "fc:frame:button:1": "Play Shelby's Ledger",
-    "fc:frame:post_url": "https://shelbys-ledger.vercel.app/api/frame",
+    "fc:frame": JSON.stringify({
+      version: "next",
+      imageUrl: `${appUrl}/og-image.png`,
+      button: {
+        title: "Play Shelby's Ledger",
+        action: {
+          type: "launch_frame",
+          name: "Shelby's Ledger",
+          url: appUrl,
+          splashImageUrl: `${appUrl}/icon.png`,
+          splashBackgroundColor: "#0d0d0f"
+        }
+      }
+    }),
   },
 };
 

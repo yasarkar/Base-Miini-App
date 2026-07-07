@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(_request: NextRequest) {
   try {
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shelbys-ledger.vercel.app";
 
     // Farcaster Frame v2 expects a signed message
     // This endpoint handles frame button clicks
@@ -11,15 +12,15 @@ export async function POST(_request: NextRequest) {
       frames: [
         {
           version: "vNext",
-          image: "https://shelbys-ledger.vercel.app/og-image.png",
+          image: `${appUrl}/og-image.png`,
           buttons: [
             {
               label: "Play Shelby's Ledger",
               action: "link",
-              target: "https://shelbys-ledger.vercel.app",
+              target: appUrl,
             },
           ],
-          postUrl: "https://shelbys-ledger.vercel.app/api/frame",
+          postUrl: `${appUrl}/api/frame`,
         },
       ],
     };
