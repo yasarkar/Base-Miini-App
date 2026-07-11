@@ -7,27 +7,30 @@ import type { FarcasterContext } from "@/lib/farcaster";
 export function useFarcasterSDK() {
   const [farcasterContext, setFarcasterContext] = useState<FarcasterContext | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const hasSignaledReady = useRef(false);
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     let mounted = true;
 
     async function initialize() {
+      if (isInitialized.current) return;
+      isInitialized.current = true;
+
       try {
-        // 1. Signal ready — hide the host splash screen.
-        //    Per official Farcaster docs (getting-started):
-        //    "After your app loads, you must call sdk.actions.ready()
-        //     to hide the splash screen and display your content."
-        if (!hasSignaledReady.current) {
-          await sdk.actions.ready();
-          hasSignaledReady.current = true;
-        }
+        console.log("[Farcaster SDK] Checking if in mini-app...");
+        const inMiniApp = await sdk.isInMiniApp();
+        console.log("[Farcaster SDK] isInMiniApp result:", inMiniApp);
 
-        // 2. Now read the user context (FID, username, etc.)
-        const context = await sdk.context;
+        if (inMiniApp) {
+          // 1. Get context (with a timeout fallback just in case it hangs)
+          console.log("[Farcaster SDK] Getting context...");
+          const contextPromise = sdk.context;
+          const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1000));
+          
+          const context = await Promise.race([contextPromise, timeoutPromise]);
+          console.log("[Farcaster SDK] Context received:", context);
 
-        if (mounted) {
-          if (context?.user) {
+          if (mounted && context?.user) {
             setFarcasterContext({
               fid: context.user.fid ?? 0,
               username: context.user.username ?? null,
@@ -36,12 +39,26 @@ export function useFarcasterSDK() {
               isAuthenticated: true,
             });
           }
-          setIsLoading(false);
+
+          // 2. Call ready() to hide the splash screen.
+          // We call this AFTER setting the context so the UI has already started rendering with context values,
+          // or we call it even if the context timed out to ensure the splash screen goes away.
+          console.log("[Farcaster SDK] Calling sdk.actions.ready()...");
+          try {
+            await Promise.race([
+              sdk.actions.ready(),
+              new Promise((resolve) => setTimeout(resolve, 500))
+            ]);
+            console.log("[Farcaster SDK] sdk.actions.ready() completed.");
+          } catch (readyError) {
+            console.warn("[Farcaster SDK] sdk.actions.ready() failed:", readyError);
+          }
+        } else {
+          console.log("[Farcaster SDK] Not in mini-app, bypassing initialization.");
         }
       } catch (error) {
-        // If the SDK throws (e.g. not inside a Farcaster host),
-        // set isLoading=false so the app can still render.
-        console.warn("[Farcaster] SDK error:", error);
+        console.warn("[Farcaster SDK] Initialization failed:", error);
+      } finally {
         if (mounted) {
           setIsLoading(false);
         }
