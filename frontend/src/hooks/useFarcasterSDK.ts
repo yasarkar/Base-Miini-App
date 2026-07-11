@@ -22,11 +22,20 @@ export function useFarcasterSDK() {
         console.log("[Farcaster SDK] isInMiniApp result:", inMiniApp);
 
         if (inMiniApp) {
-          // 1. Get context (with a timeout fallback just in case it hangs)
-          console.log("[Farcaster SDK] Getting context...");
+          // Kick off both context fetching and ready() in parallel so the
+          // splash screen is dismissed as soon as possible.
           const contextPromise = sdk.context;
+
+          // Call ready() immediately — do NOT wait for context first.
+          // Hiding the splash screen is independent of having user context.
+          console.log("[Farcaster SDK] Calling sdk.actions.ready()...");
+          const readyPromise = sdk.actions.ready().catch((err) => {
+            console.warn("[Farcaster SDK] sdk.actions.ready() failed:", err);
+          });
+
+          // Get context (with a timeout fallback just in case it hangs)
+          console.log("[Farcaster SDK] Getting context...");
           const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1000));
-          
           const context = await Promise.race([contextPromise, timeoutPromise]);
           console.log("[Farcaster SDK] Context received:", context);
 
@@ -40,19 +49,9 @@ export function useFarcasterSDK() {
             });
           }
 
-          // 2. Call ready() to hide the splash screen.
-          // We call this AFTER setting the context so the UI has already started rendering with context values,
-          // or we call it even if the context timed out to ensure the splash screen goes away.
-          console.log("[Farcaster SDK] Calling sdk.actions.ready()...");
-          try {
-            await Promise.race([
-              sdk.actions.ready(),
-              new Promise((resolve) => setTimeout(resolve, 500))
-            ]);
-            console.log("[Farcaster SDK] sdk.actions.ready() completed.");
-          } catch (readyError) {
-            console.warn("[Farcaster SDK] sdk.actions.ready() failed:", readyError);
-          }
+          // Await ready() completion (it likely already finished by now)
+          await readyPromise;
+          console.log("[Farcaster SDK] sdk.actions.ready() completed.");
         } else {
           console.log("[Farcaster SDK] Not in mini-app, bypassing initialization.");
         }
