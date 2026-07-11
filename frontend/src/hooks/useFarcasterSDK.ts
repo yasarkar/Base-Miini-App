@@ -17,18 +17,18 @@ export function useFarcasterSDK() {
       isInitialized.current = true;
 
       try {
-        // Call ready() unconditionally and as early as possible.
-        // Per the Neynar SDK docs, this must be called regardless of
-        // isInMiniApp() — if we're not in a mini app host the call is a no-op.
+        // CRITICAL: Call and await ready() FIRST to dismiss the splash screen.
+        // Per Farcaster docs, this must be called as early as possible.
+        // If not called promptly, users see "Ready not called" and an
+        // infinite splash screen.
         console.log("[Farcaster SDK] Calling sdk.actions.ready()...");
-        const readyPromise = sdk.actions.ready().catch((err) => {
-          console.warn("[Farcaster SDK] sdk.actions.ready() failed:", err);
-        });
+        await sdk.actions.ready();
+        console.log("[Farcaster SDK] sdk.actions.ready() completed.");
 
-        // Try to read Farcaster context (optional — may fail if not in mini-app)
+        // Now try to read Farcaster context (optional — may fail if not in mini-app)
         console.log("[Farcaster SDK] Getting context...");
         const contextPromise = sdk.context;
-        const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+        const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
         const context = await Promise.race([contextPromise, timeoutPromise]);
         console.log("[Farcaster SDK] Context received:", context);
 
@@ -41,9 +41,6 @@ export function useFarcasterSDK() {
             isAuthenticated: true,
           });
         }
-
-        await readyPromise;
-        console.log("[Farcaster SDK] sdk.actions.ready() completed.");
       } catch (error) {
         console.warn("[Farcaster SDK] Initialization failed:", error);
       } finally {
