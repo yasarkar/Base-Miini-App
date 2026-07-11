@@ -14,15 +14,16 @@ export function useFarcasterSDK() {
 
     async function initialize() {
       try {
-        // Per official Farcaster docs:
-        // "After your app loads, you must call sdk.actions.ready()
-        //  to hide the splash screen and display your content."
+        // 1. Signal ready — hide the host splash screen.
+        //    Per official Farcaster docs (getting-started):
+        //    "After your app loads, you must call sdk.actions.ready()
+        //     to hide the splash screen and display your content."
         if (!hasSignaledReady.current) {
           await sdk.actions.ready();
           hasSignaledReady.current = true;
         }
 
-        // Read Farcaster user context
+        // 2. Now read the user context (FID, username, etc.)
         const context = await sdk.context;
 
         if (mounted) {
@@ -38,6 +39,8 @@ export function useFarcasterSDK() {
           setIsLoading(false);
         }
       } catch (error) {
+        // If the SDK throws (e.g. not inside a Farcaster host),
+        // set isLoading=false so the app can still render.
         console.warn("[Farcaster] SDK error:", error);
         if (mounted) {
           setIsLoading(false);
