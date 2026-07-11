@@ -62,7 +62,18 @@ export class GameEngine {
   }
 
   private setupInput(): void {
+    // Use a flag to prevent ghost clicks on mobile (touch + click firing together)
+    let touchFired = false;
+
     this.canvasInputHandler = (e: Event) => {
+      // Ignore synthetic click events that follow a touchstart (ghost click prevention)
+      if (e.type === "click" && touchFired) {
+        touchFired = false;
+        return;
+      }
+      if (e.type === "touchstart") {
+        touchFired = true;
+      }
       e.preventDefault();
       if (this.screen === "start") {
         this.startGame();
@@ -139,6 +150,8 @@ export class GameEngine {
     if (hitObstacle) {
       this.screen = "gameover";
       this.scoreManager.gameOver();
+      // Stop the game loop immediately so CPU doesn't keep running
+      this.stop();
       if (this.onGameOver) {
         const duration = (performance.now() - this.gameStartTime) / 1000;
         this.onGameOver(this.scoreManager.getScore(), duration);
@@ -213,19 +226,29 @@ export class GameEngine {
     this.ctx.restore();
   }
 
-  destroy(): void {
+  stop(): void {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
+  }
+
+  destroy(): void {
+    this.stop();
     if (this.resizeHandler) {
       window.removeEventListener("resize", this.resizeHandler);
+      this.resizeHandler = null;
     }
     if (this.keydownHandler) {
       window.removeEventListener("keydown", this.keydownHandler);
+      this.keydownHandler = null;
     }
     if (this.canvasInputHandler) {
       this.canvas.removeEventListener("click", this.canvasInputHandler);
       this.canvas.removeEventListener("touchstart", this.canvasInputHandler);
+      this.canvasInputHandler = null;
     }
+    // Prevent ghost click on mobile: ensure canvas doesn't capture events post-destroy
+    this.canvas.style.pointerEvents = "none";
   }
 }

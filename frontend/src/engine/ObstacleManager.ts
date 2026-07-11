@@ -35,13 +35,19 @@ export class ObstacleManager {
       canSpawn = true;
     }
 
-    // Apply minGap and maxGap constraints if there are existing obstacles
+    // Apply minGap and maxGap constraints, scaling gap with speed so obstacles
+    // don't become impossible to react to at high speeds.
     if (this.obstacles.length > 0) {
       const lastObstacle = this.obstacles[this.obstacles.length - 1];
       const gap = this.canvasWidth - (lastObstacle.x + lastObstacle.width);
-      if (gap < OBSTACLE.minGap) {
+      // Scale minGap with speed: at higher speeds, obstacles move faster,
+      // so we need a larger minimum gap to keep reaction time reasonable.
+      const speedRatio = Math.max(1, speed / GAME_CONFIG.baseSpeed);
+      const scaledMinGap = OBSTACLE.minGap * speedRatio;
+      const scaledMaxGap = OBSTACLE.maxGap * speedRatio;
+      if (gap < scaledMinGap) {
         canSpawn = false; // Too close, delay spawning
-      } else if (gap > OBSTACLE.maxGap) {
+      } else if (gap > scaledMaxGap) {
         canSpawn = true; // Too far, force spawn to keep game engaging
       }
     }

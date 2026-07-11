@@ -1,7 +1,14 @@
-import type { Obstacle, PlayerState } from "./types";
+import type { Obstacle } from "./types";
+
+interface Bounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 export class CollisionDetector {
-  static checkCollision(player: PlayerState, obstacle: Obstacle): boolean {
+  static checkCollision(player: Bounds, obstacle: Obstacle): boolean {
     const px = player.x;
     const py = player.y;
     const pw = player.width;
@@ -17,14 +24,11 @@ export class CollisionDetector {
   }
 
   static checkAnyCollision(
-    playerBounds: { x: number; y: number; width: number; height: number },
+    playerBounds: Bounds,
     obstacles: Obstacle[]
   ): Obstacle | null {
     for (const obstacle of obstacles) {
-      if (this.checkCollision(
-        { ...playerBounds } as PlayerState,
-        obstacle
-      )) {
+      if (this.checkCollision(playerBounds, obstacle)) {
         return obstacle;
       }
     }
