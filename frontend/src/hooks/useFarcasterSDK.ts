@@ -13,16 +13,18 @@ export function useFarcasterSDK() {
 
     async function initialize() {
       try {
+        // Signal ready FIRST to dismiss splash screen as early as possible
+        // (Neynar docs: "call ready() as early as possible, after pageload processes")
+        if (!hasSignaledReady.current) {
+          await signalReady();
+          hasSignaledReady.current = true;
+        }
+
         const context = await initFarcasterSDK();
 
         if (mounted) {
           setFarcasterContext(context);
           setIsLoading(false);
-
-          if (!hasSignaledReady.current) {
-            signalReady();
-            hasSignaledReady.current = true;
-          }
         }
       } catch (error) {
         console.warn("Farcaster SDK init error:", error);
