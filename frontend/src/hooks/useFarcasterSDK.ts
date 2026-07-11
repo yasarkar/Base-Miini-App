@@ -17,44 +17,33 @@ export function useFarcasterSDK() {
       isInitialized.current = true;
 
       try {
-        console.log("[Farcaster SDK] Checking if in mini-app...");
-        const inMiniApp = await sdk.isInMiniApp();
-        console.log("[Farcaster SDK] isInMiniApp result:", inMiniApp);
+        // Call ready() unconditionally and as early as possible.
+        // Per the Neynar SDK docs, this must be called regardless of
+        // isInMiniApp() — if we're not in a mini app host the call is a no-op.
+        console.log("[Farcaster SDK] Calling sdk.actions.ready()...");
+        const readyPromise = sdk.actions.ready().catch((err) => {
+          console.warn("[Farcaster SDK] sdk.actions.ready() failed:", err);
+        });
 
-        if (inMiniApp) {
-          // Kick off both context fetching and ready() in parallel so the
-          // splash screen is dismissed as soon as possible.
-          const contextPromise = sdk.context;
+        // Try to read Farcaster context (optional — may fail if not in mini-app)
+        console.log("[Farcaster SDK] Getting context...");
+        const contextPromise = sdk.context;
+        const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1500));
+        const context = await Promise.race([contextPromise, timeoutPromise]);
+        console.log("[Farcaster SDK] Context received:", context);
 
-          // Call ready() immediately — do NOT wait for context first.
-          // Hiding the splash screen is independent of having user context.
-          console.log("[Farcaster SDK] Calling sdk.actions.ready()...");
-          const readyPromise = sdk.actions.ready().catch((err) => {
-            console.warn("[Farcaster SDK] sdk.actions.ready() failed:", err);
+        if (mounted && context?.user) {
+          setFarcasterContext({
+            fid: context.user.fid ?? 0,
+            username: context.user.username ?? null,
+            displayName: context.user.displayName ?? null,
+            pfpUrl: context.user.pfpUrl ?? null,
+            isAuthenticated: true,
           });
-
-          // Get context (with a timeout fallback just in case it hangs)
-          console.log("[Farcaster SDK] Getting context...");
-          const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1000));
-          const context = await Promise.race([contextPromise, timeoutPromise]);
-          console.log("[Farcaster SDK] Context received:", context);
-
-          if (mounted && context?.user) {
-            setFarcasterContext({
-              fid: context.user.fid ?? 0,
-              username: context.user.username ?? null,
-              displayName: context.user.displayName ?? null,
-              pfpUrl: context.user.pfpUrl ?? null,
-              isAuthenticated: true,
-            });
-          }
-
-          // Await ready() completion (it likely already finished by now)
-          await readyPromise;
-          console.log("[Farcaster SDK] sdk.actions.ready() completed.");
-        } else {
-          console.log("[Farcaster SDK] Not in mini-app, bypassing initialization.");
         }
+
+        await readyPromise;
+        console.log("[Farcaster SDK] sdk.actions.ready() completed.");
       } catch (error) {
         console.warn("[Farcaster SDK] Initialization failed:", error);
       } finally {
