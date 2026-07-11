@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import type { GameSession } from "@/lib/scoreToken";
 import { useFarcasterSDK } from "@/hooks/useFarcasterSDK";
 import { useSubmitScore } from "@/hooks/useSubmitScore";
 import { ShareCastButton } from "./ShareCastButton";
@@ -10,7 +11,7 @@ import { Leaderboard } from "./Leaderboard";
 interface GameOverScreenProps {
   score: number;
   duration: number;
-  sessionToken: any;
+  sessionToken: GameSession | null;
   onRestart: () => void;
 }
 
@@ -20,14 +21,10 @@ export function GameOverScreen({ score, duration, sessionToken, onRestart }: Gam
   const [hasUnlockedFlatCap, setHasUnlockedFlatCap] = useState(false);
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
 
-  // Load flat cap state from localStorage on mount
+  // Load flat cap state from localStorage on mount (always available client-side)
   useEffect(() => {
-    try {
-      const unlocked = localStorage.getItem("shelby_flat_cap_unlocked") === "true";
-      setHasUnlockedFlatCap(unlocked);
-    } catch (e) {
-      console.error("Failed to load flat cap state:", e);
-    }
+    const unlocked = localStorage.getItem("shelby_flat_cap_unlocked") === "true";
+    setHasUnlockedFlatCap(unlocked);
   }, []);
 
   // Auto-submit score on mount
@@ -39,11 +36,7 @@ export function GameOverScreen({ score, duration, sessionToken, onRestart }: Gam
   }, [score, duration, sessionToken, fid, username, submitScore, scoreSubmitted]);
 
   const handlePaymentSuccess = () => {
-    try {
-      localStorage.setItem("shelby_flat_cap_unlocked", "true");
-    } catch (e) {
-      console.error("Failed to save flat cap state:", e);
-    }
+    localStorage.setItem("shelby_flat_cap_unlocked", "true");
     setHasUnlockedFlatCap(true);
   };
 

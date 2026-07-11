@@ -24,7 +24,7 @@ export interface BasePayButtonProps {
   };
   colorScheme?: 'light' | 'dark';
   onSuccess?: () => void;
-  onError?: (error: any) => void;
+  onError?: (error: Error) => void;
   disabled?: boolean;
 }
 

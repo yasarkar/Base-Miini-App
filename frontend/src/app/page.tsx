@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import type { GameSession } from "@/lib/scoreToken";
 import { StartScreen } from "@/components/StartScreen";
 import { GameCanvas } from "@/components/GameCanvas";
 import { GameOverScreen } from "@/components/GameOverScreen";
@@ -14,7 +15,7 @@ export default function Home() {
   const [finalScore, setFinalScore] = useState(0);
   const [finalDuration, setFinalDuration] = useState(0);
   const [gameKey, setGameKey] = useState(0);
-  const [sessionToken, setSessionToken] = useState<any>(null);
+  const [sessionToken, setSessionToken] = useState<GameSession | null>(null);
 
   const fetchSession = useCallback(async () => {
     try {
@@ -37,15 +38,11 @@ export default function Home() {
   }, []);
 
   const handleGameOver = useCallback((score: number, duration: number) => {
-    // Save high score locally
-    try {
-      const stored = localStorage.getItem("shelby_high_score");
-      const currentHigh = stored ? parseInt(stored, 10) : 0;
-      if (score > currentHigh) {
-        localStorage.setItem("shelby_high_score", score.toString());
-      }
-    } catch (e) {
-      console.error("Failed to save high score:", e);
+    // Save high score locally (localStorage is always available client-side)
+    const stored = localStorage.getItem("shelby_high_score");
+    const currentHigh = stored ? parseInt(stored, 10) : 0;
+    if (score > currentHigh) {
+      localStorage.setItem("shelby_high_score", score.toString());
     }
     setFinalScore(score);
     setFinalDuration(duration);

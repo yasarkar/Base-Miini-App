@@ -22,7 +22,7 @@ export function BasePayButtonWrapper({ onPaymentSuccess, disabled = false }: Bas
     onPaymentSuccess();
   };
 
-  const handlePaymentError = (err: any) => {
+  const handlePaymentError = (err: Error) => {
     console.error("BasePayButton error:", err);
   };
 
