@@ -40,7 +40,7 @@ shelbys-ledger-birmingham-escape/
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.11.0+ (required by Farcaster Mini App SDK)
 - Java 17+ (for backend)
 - Maven (for backend)
 
