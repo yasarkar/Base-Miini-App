@@ -25,6 +25,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@base-account-kit/react": [
+        "./packages/base-account-kit-react"
       ]
     }
   },

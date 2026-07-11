@@ -1,5 +1,9 @@
 import crypto from "crypto";
 
+// This fallback is ONLY for local development. In production (Vercel),
+// SCORE_SIGNING_SECRET MUST be set as an environment variable.
+// If this fallback is used in production, createGameSession() and verifyGameSession()
+// will throw an error.
 const SECRET = process.env.SCORE_SIGNING_SECRET || "birmingham_shelby_secret_key_1919_ledger_dev";
 
 export interface GameSession {

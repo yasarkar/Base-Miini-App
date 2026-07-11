@@ -1,34 +1,29 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 
 interface SubmitScoreParams {
   fid: number;
   username: string;
   score: number;
   duration: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sessionToken: any;
 }
-
-// Memory cache to prevent duplicate client-side submissions for the same session ID
-const submittedSessionIds = new Set<string>();
 
 export function useSubmitScore() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  // Ref-based guard to prevent double submission even in Strict Mode re-renders
+  const hasSubmittedRef = useRef(false);
 
   const submitScore = useCallback(async ({ fid, username, score, duration, sessionToken }: SubmitScoreParams) => {
-    const sessionId = sessionToken?.sessionId;
-    
-    // Prevent double submission for the same session
-    if (sessionId && submittedSessionIds.has(sessionId)) {
+    // Prevent double submission for the same mount lifecycle
+    if (hasSubmittedRef.current) {
       return false;
     }
-    
-    if (sessionId) {
-      submittedSessionIds.add(sessionId);
-    }
+    hasSubmittedRef.current = true;
 
     try {
       setIsSubmitting(true);
